@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect,  } from "react";
+import React, { Component, useState, useEffect, setState  } from "react";
 import "./App.css";
 import axios from "axios";
 // import gitHubSlicer from "./component/Api/gitHubSlicer";
@@ -20,18 +20,18 @@ function ApiCaller() {
   };
 
 // promise then
-  const getGitHubUserWithFetch = async () => {
-      const response = await fetch(gitHubUrl);
-  const jsonData = await response.json();
-  setUserData(jsonData);
-  };
+  // const getGitHubUserWithFetch = async () => {
+  //     const response = await fetch(gitHubUrl);
+  // const jsonData = await response.json();
+  // setUserData(jsonData);
+  // };
 
   // dont work
-  const getGitHubUserWithFetch2 = () => {
-    const response =  fetch(gitHubUrl)
-    .then(response => response.json());
-    setUserData(response);
-};
+//   const getGitHubUserWithFetch2 = () => {
+//     const response =  fetch(gitHubUrl)
+//     .then(response => response.json());
+//     setUserData(response);
+// };
 
   return (
       
@@ -44,18 +44,29 @@ function ApiCaller() {
   );
 }
 
+function ApiCallerPropper({name, location, blog, company}) {
+
+  return (
+      
+      <div className="user-container">
+        <h5 className="info-item">{name}</h5>
+        <h5 className="info-item">{location}</h5>
+        <h5 className="info-item">{blog}</h5>
+        <h5 className="info-item">{company}</h5>
+      </div>
+  );
+}
+
+
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      // name: false
-      name: "props",
-      location: "props",
-      blog: "props",
-      company: "props"
+      name: [],
+      isLoaded: false
+    }
 
-    };
   }
   
 
@@ -65,14 +76,20 @@ class App extends Component {
   // setUserData(jsonData);
   // };
 
-  async componentDidMount() {
+   componentDidMount() {
     const gitHubUrl = "https://api.github.com/users/jacgit18";
 
-    // const response = await axios.get(gitHubUrl);
-    const response = await fetch(gitHubUrl);
+   fetch(gitHubUrl)
+   .then(response=>response.json()
+   .then(json=>{
+    this.setState({
+      name:json,
+      isLoaded: true,
 
-    const data = await response.json();
-    this.setState({name: data })
+    })
+   }));
+
+    // this.setState(props.name= data );
     // this.setState({location: data})
     // this.setState({blog: data})
     // this.setState({company: data})
@@ -82,8 +99,11 @@ class App extends Component {
   }
 
 
-  
   render() {
+    const { name, location, blog, company  } = this.props;
+    // const { name, isLoaded } = this.state;
+
+    // const {data} = this.state.data;
   //  const name=this.props.name;
     // if (this.state.loading) {
     //   return <div>loading...</div>;
@@ -97,13 +117,20 @@ class App extends Component {
       <header className="App-header">
         <h2>GitHub User Data</h2>
       </header>
+      {/* <ApiCallerPropper name={this.props.name}  /> */}
+
         <ApiCaller />
+        {/* <ul className="">
+          {name.map(names=>{
+            <li key={name.id}>{names.location}</li>
+
+          })}
+        </ul> */}
+
        {/* <h5 className="info-item">{name}</h5> */}
-       {/* <h5 className="info-item">{ this.props.name }</h5> */}
-       {/* <h5 className="info-item">{ this.state.props.name }</h5> */}
-         {/* <h5 className="info-item">{this.state.props.location}</h5>
-        <h5 className="info-item">{this.state.props.blog}</h5>
-        <h5 className="info-item">{this.state.props.company}</h5> */}
+         {/* <h5 className="info-item">{location}</h5>
+        <h5 className="info-item">{blog}</h5>
+        <h5 className="info-item">{company}</h5> */}
        
     </div>
    );
